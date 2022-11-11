@@ -14,18 +14,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class Tray extends BFrame implements MouseListener, ActionListener {
     private JLabel whoPlay;
     private int idPlayerWhoPlay;
+
     private final String Player1;
     private final String Player2;
     private final Color p1Color;
     private final Color p2Color;
     private final int btnRadius;
+
     private final Color trayColor;
     private final int trayW;
     private final int trayH;
+
     private BDessin[][] matrix;
 
     public Tray(String joueur1, String joueur2) {
@@ -62,13 +66,95 @@ public class Tray extends BFrame implements MouseListener, ActionListener {
     /**
      * TODO: Algo pour resoudre le puissance 4 (Je delegue la tache lol)
      * */
-    public void leCorrecteurDeOuf() {
+    public void isGameWon(int whoPlay) {
         // Verification lineaire
         for(int i = 0; i <= this.matrix.length-1; i++) {
             for(int j = 0; j <= this.matrix[i].length-1; j++) {
-
+                if(whoPlay == 1) {
+                    isThereNeighbors(i,j,p1Color);
+                } else if(whoPlay == 2) {
+                    isThereNeighbors(i,j,p2Color);
+                } else {
+                    System.out.println("Erreur sur isGameWon().");
+                    System.exit(-1);
+                }
             }
         }
+    }
+
+    /**
+     * Detecte les voisins du pion pour verifier la condition de victoire 
+     */
+    public void isThereNeighbors(int i, int j, Color color) {
+
+        if(this.matrix[i][j].getColor() != Color.WHITE && 
+        this.matrix[i][j].getColor() != Color.GREEN && 
+        i != 0 && j != 0 && 
+        this.matrix[i][j].getColor().equals(this.matrix[i-1][j-1].getColor()) && 
+        this.matrix[i][j].getColor().equals(color)
+        ) {
+            System.out.println("haut gauche " + color);
+        }
+
+        if(this.matrix[i][j].getColor() != Color.WHITE && 
+        this.matrix[i][j].getColor() != Color.GREEN && 
+        i != 0 && this.matrix[i][j].getColor().equals(this.matrix[i-1][j].getColor()) && 
+        this.matrix[i][j].getColor().equals(color) 
+        ) {
+            System.out.println("haut " + color);
+        }
+
+        if(this.matrix[i][j].getColor() != Color.WHITE && 
+        this.matrix[i][j].getColor() != Color.GREEN && 
+        i != 0 && j != this.matrix[i].length-1 && 
+        this.matrix[i][j].getColor().equals(this.matrix[i-1][j+1].getColor()) && 
+        this.matrix[i][j].getColor().equals(color)
+        ) {
+            System.out.println("haut droite " + color);
+        }
+
+        if(this.matrix[i][j].getColor() != Color.WHITE && 
+        this.matrix[i][j].getColor() != Color.GREEN && 
+        j != 0 && this.matrix[i][j].getColor().equals(this.matrix[i][j-1].getColor()) && 
+        this.matrix[i][j].getColor().equals(color) 
+        ) {
+            System.out.println("gauche " + color);
+        }
+
+        if(this.matrix[i][j].getColor() != Color.WHITE && 
+        this.matrix[i][j].getColor() != Color.GREEN && 
+        j != this.matrix[i].length-1 && this.matrix[i][j].getColor().equals(this.matrix[i][j+1].getColor()) && 
+        this.matrix[i][j].getColor().equals(color)
+        ) {
+            System.out.println("droite " + color);
+        }
+
+        if(this.matrix[i][j].getColor() != Color.WHITE && 
+        this.matrix[i][j].getColor() != Color.GREEN && 
+        i != this.matrix.length-1 && j != 0 && 
+        this.matrix[i][j].getColor().equals(this.matrix[i+1][j-1].getColor()) && 
+        this.matrix[i][j].getColor().equals(color)
+        ) {
+            System.out.println("bas gauche "+  color);
+        }
+
+        if(this.matrix[i][j].getColor() != Color.WHITE && 
+        this.matrix[i][j].getColor() != Color.GREEN && 
+        i != this.matrix.length-1 && this.matrix[i][j].getColor().equals(this.matrix[i+1][j].getColor()) && 
+        this.matrix[i][j].getColor().equals(color)
+        ) {
+            System.out.println("bas " + color);
+        }
+
+        if(this.matrix[i][j].getColor() != Color.WHITE && 
+        this.matrix[i][j].getColor() != Color.GREEN && 
+        i != this.matrix.length-1 && j != this.matrix[i].length-1 && 
+        this.matrix[i][j].getColor().equals(this.matrix[i+1][j+1].getColor()) && 
+        this.matrix[i][j].getColor().equals(color)
+        ) {
+            System.out.println("bas droite " + color);
+        }
+
     }
 
     /**
@@ -132,11 +218,13 @@ public class Tray extends BFrame implements MouseListener, ActionListener {
             int col = posCol;
 
             for (int i = row; i <= trayH - 1; i--) {
-                if (this.matrix[i][col].getColor() == Color.WHITE) {
+                if (this.matrix[i][col].getColor() == Color.WHITE || this.matrix[i][col].getColor() == Color.GREEN) {
                     if (this.idPlayerWhoPlay == 1) {
+                        System.out.println("Put: " + i + ":" + col);
                         this.matrix[i][col].setColor(this.p1Color);
                         switchPlayer(1);
                     } else if (this.idPlayerWhoPlay == 2) {
+                        System.out.println("Put: " + i + ":" + col);
                         this.matrix[i][col].setColor(this.p2Color);
                         switchPlayer(2);
                     }
@@ -171,11 +259,22 @@ public class Tray extends BFrame implements MouseListener, ActionListener {
         for (int i = 0; i <= this.matrix.length - 1; i++) {
             for (int j = 0; j <= this.matrix[i].length - 1; j++) {
                 if (this.matrix[i][j] == e.getSource()) {
-                    System.out.println(i + " " + j);
+                    System.out.println("Click: " + i + ":" + j);
                     this.getTheLast(j);
+                    isGameWon(this.idPlayerWhoPlay);
                     break;
                 }
             }
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        BDessin source = (BDessin) e.getSource();
+
+        if(source.getColor() == Color.WHITE) {
+            source.setColor(Color.GREEN);
+            this.refreshBFrame();
         }
     }
 
@@ -196,10 +295,12 @@ public class Tray extends BFrame implements MouseListener, ActionListener {
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
     public void mouseExited(MouseEvent e) {
+        BDessin source = (BDessin) e.getSource();
+
+        if(source.getColor() == Color.GREEN) {
+            source.setColor(Color.WHITE);
+            this.refreshBFrame();
+        }
     }
 }

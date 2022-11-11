@@ -101,7 +101,6 @@ public class BDatabase {
         values.append(")");
 
         String request = "INSERT INTO " + table + collumns + " VALUES" + values + ";";
-
         System.out.println(request);
 
         try {
@@ -127,6 +126,10 @@ public class BDatabase {
         } catch(SQLException e) {
             return false;
         }
+    }
+
+    public void fetchAll() {
+        
     }
 
     /**
@@ -172,6 +175,23 @@ public class BDatabase {
      */
     public boolean getStatus() {
         return this.status;
+    }
+
+    /**
+     * @return Resultat de ce que la requete envoie.
+     */
+    public void fetchAll(String[] focus, String[] from, String[] condition) {
+
+    }
+
+    public String supportForFetchAll(String[] truc) {
+        String tmp = "";
+
+        for(String s : truc) {
+            tmp = tmp + s + ", ";
+        }
+
+        return tmp;
     }
 
     @Override
