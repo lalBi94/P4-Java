@@ -114,7 +114,6 @@ public class ParamMenu extends BFrame implements ActionListener {
         // settings.setPositionY(10);
         // this.add()
 
-
         this.openBFrame();
         this.refreshBFrame();
     }
@@ -124,7 +123,7 @@ public class ParamMenu extends BFrame implements ActionListener {
         String command = e.getActionCommand();
 
         if (Objects.equals(command, "play")) {
-            this.hide();
+            this.dispose();
         } else if (Objects.equals(command, "exit")) {
             /*
              * TODO: Revenir au menu principal (il est pas encore fini donc a voir plus tard
@@ -139,7 +138,8 @@ public class ParamMenu extends BFrame implements ActionListener {
         } else if (Objects.equals(command, "help")) {
             try {
                 new Help();
-            } catch (IOException ignore) {}
+            } catch (IOException ignore) {
+            }
         } else if (Objects.equals(command, "feedback")) {
             if (this.sharedObject.getStatus()) {
                 new Feedback("justLikeThis :)");

@@ -30,7 +30,7 @@ public class Feedback extends BFrame implements ActionListener {
      * Fenetre pour mettre un feedback
      *
      * @param mode Pour definir si il faut quitter l'application apres le feedback
-     * */
+     */
     public Feedback(String mode) {
         super(
                 "Feedback - Puissance 4",
@@ -38,10 +38,11 @@ public class Feedback extends BFrame implements ActionListener {
                 250,
                 300,
                 350,
-                2 /* Pour celui qui vas retravailler dessus,
-                    3 = Ferme le programme
-                    2 = Fermer la fenetre courrante et non toute
-                    */
+                2 /*
+                   * Pour celui qui vas retravailler dessus,
+                   * 3 = Ferme le programme
+                   * 2 = Fermer la fenetre courrante et non toute
+                   */
         );
 
         this.questions = new ArrayList<>();
@@ -62,7 +63,7 @@ public class Feedback extends BFrame implements ActionListener {
 
     /**
      * Pour afficher la plat. de feedback
-     * */
+     */
     public void Display() {
         BLayout settings = new BLayout();
         settings.setPositionX(3);
@@ -128,36 +129,32 @@ public class Feedback extends BFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(Objects.equals(e.getActionCommand(), "send")) {
-            String gen =
-                    whereKnowQuestInner.getContent() + " | " +
-                            itsFunnyOrNotInner.getContent() + " | " +
-                            toBeingBetterInner.getContent();
+        if (Objects.equals(e.getActionCommand(), "send")) {
+            String gen = whereKnowQuestInner.getContent() + " | " +
+                    itsFunnyOrNotInner.getContent() + " | " +
+                    toBeingBetterInner.getContent();
 
-            if(this.sharedObject.insertRow(
+            if (this.sharedObject.insertRow(
                     "feedback_p4",
-                    new String[]{"age", "feedback"},
-                    new String[]{ageQuestInner.getContent(), gen}
-            )) {
+                    new String[] { "age", "feedback" },
+                    new String[] { ageQuestInner.getContent(), gen })) {
                 JOptionPane.showMessageDialog(
                         this,
                         "Merci pour votre avis, a bientot ! :)",
                         "Puissance 4",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
+                        JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(
                         this,
                         "Suite a un probleme, votre retour n'a pas ete envoye :(",
                         "Puissance 4",
-                        JOptionPane.ERROR_MESSAGE
-                );
+                        JOptionPane.ERROR_MESSAGE);
             }
 
-            if(this.mode == "exit") {
+            if (this.mode == "exit") {
                 this.closeBFrame();
             } else {
-                this.hide();
+                this.dispose();
             }
         }
     }
